@@ -1,14 +1,21 @@
-import React from 'react'
 
 const TargetForSaving = () => {
+ 
+
+  const handleSubmit = () =>
+  {
+  }
+
+
+
   return (
     <div>
-    <form>
+    <form onSubmit={handleSubmit}>
         <div>
-                <label htmlFor="target">Set Target</label>
-                <input type="number" name="target" id="target" />
-                <button >Reset</button>
+                <label htmlFor="targetSave">Set Target</label>
+                <input type="number" name="targetSave" id="targetSave" />
         </div>
+                <button type="submit">Reset</button>
     </form>
 
         <div>
