@@ -57,6 +57,18 @@ const IncomeForm = ()=> {
    
     }
 
+    const deleteItem = (indexToDelete: number) => {
+      console.log({indexToDelete})
+      const newExpenses = [...incomes];
+      newExpenses.splice(indexToDelete, 1);
+      setIncomes(newExpenses);
+      console.log("Delete from array")
+      console.log({incomes})
+      console.log({...incomes})
+
+
+  
+    };
 
   return (
     <div>
@@ -76,9 +88,12 @@ const IncomeForm = ()=> {
             <button type="submit">Add Income</button>
         </form>
         <ul>
-          {
-            incomes.map((income: incomeBudget) =>(
-            <li key={income.incomeAmount}>{income.incomeSource}: {income.incomeAmount}$ On {income.incomeDate}</li>
+        {
+            incomes.map((income: incomeBudget, index: number) =>(
+            <li key={index}>{income.incomeSource}: {income.incomeAmount}$ On {income.incomeDate}
+                        <br /> <button  onClick={() => deleteItem(index)}>Delete</button>
+            </li> 
+
             ))
           }
         </ul>

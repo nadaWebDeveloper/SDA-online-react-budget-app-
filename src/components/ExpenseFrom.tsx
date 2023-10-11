@@ -1,6 +1,7 @@
 import {FormEvent , useState , ChangeEvent} from 'react'
 
 
+
 type ExpenseBudget =
 {
   expenseSource:string;
@@ -56,6 +57,13 @@ const ExpenseFrom = () => {
   }
 
 
+
+  const deleteItem = (indexToDelete: number) => {
+    setExpenses(expenses => expenses.filter((_, index) => index !== indexToDelete));
+    console.log("Delete from array")
+
+  };
+
   return (
     <div>
           <form onSubmit={handleSubmit}>
@@ -75,8 +83,11 @@ const ExpenseFrom = () => {
         </form>
         <ul>
           {
-            expenses.map((expense: ExpenseBudget) =>(
-            <li key={expense.expenseAmount}>{expense.expenseSource}: {expense.expenseAmount}$ On {expense.expenseDate}</li>
+            expenses.map((expense: ExpenseBudget, index: number) =>(
+            <li key={index}>{expense.expenseSource}: {expense.expenseAmount}$ On {expense.expenseDate}
+                        <br /> <button  onClick={() => deleteItem(index)}>Delete</button>
+            </li> 
+
             ))
           }
         </ul>
