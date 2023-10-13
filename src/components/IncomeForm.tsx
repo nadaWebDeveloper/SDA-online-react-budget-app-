@@ -1,7 +1,12 @@
 import {FormEvent , useState , ChangeEvent} from 'react'
+import { toast } from 'react-toastify';
+import {FaTrash} from 'react-icons/fa'
+import {v4 as uuidv4} from 'uuid'
+
 
 type incomeBudget =
   {
+    id: number;
     incomeSource:string;
     incomeAmount: number;
     incomeDate: string
@@ -10,64 +15,51 @@ type incomeBudget =
 
 const IncomeForm = ()=> {
   
-
-    const [income, setIncome] = useState<incomeBudget>({
+ const [income, setIncome] = useState<incomeBudget>({
+      id:0,
       incomeSource: '',
       incomeAmount: 0,
       incomeDate : '', 
       });
+
       
-   const [incomes, setIncomes] = useState<incomeBudget[]>([]);
+   const [incomeArray, setIncomeArray] = useState<incomeBudget[]>([]);
    const handleChange = (event: ChangeEvent<HTMLInputElement>) =>
- {
-  const {name , value} = event.target;
-  setIncome({ ...income, [name]:value});
- }
+   {
+      const {name , value} = event.target;
+      setIncome((prevIncome) => {
+        return {...prevIncome, [name]: value};
+      });
+   }
    
 
-    const [isError,setIsError ] = useState(false);
+
     //useState() active with button(type:submit) & form(onSubmit)
     const handleSubmit = (event: FormEvent) =>
     {
       event.preventDefault();
       if(income.incomeAmount && income.incomeSource && income.incomeDate)
       {
-        const newIncome = {
-          //name of input:value useState.name input
-          incomeSource:income.incomeSource, 
-          incomeAmount:income.incomeAmount,
-          incomeDate:income.incomeDate,
-          }; //to update attribute use function set....() to store data into income, amount & date
-          setIncomes([ ...incomes, newIncome]);
-          setIsError(false);
-          console.log("change all done")
+        const newIncome = { ...income, id: uuidv4()}
+        setIncomeArray((prevIncomeArray) =>
+         { 
+          return [...prevIncomeArray, newIncome]; 
+        });
+        console.log(incomeArray)
+        toast.success("New Income Is Added")  
       }
       else
       {
-        setIsError(true);
-        console.log("you miss input")
-
+      toast.error("You missing feild")
       }
-      //to reset value
-      setIncome({
-        //the same of name input
-        incomeSource:'', 
-        incomeAmount:0,
-        incomeDate:''});
-   
     }
 
-    const deleteItem = (indexToDelete: number) => {
-      console.log({indexToDelete})
-      const newExpenses = [...incomes];
-      newExpenses.splice(indexToDelete, 1);
-      setIncomes(newExpenses);
-      console.log("Delete from array")
-      console.log({incomes})
-      console.log({...incomes})
 
+    const handleDelete = (id: number) => 
+    {
+     const filteredIncomeArray = incomeArray.filter((income) => income.id !== id)
+     setIncomeArray(filteredIncomeArray); //to update array after deleting
 
-  
     };
 
   return (
@@ -75,28 +67,47 @@ const IncomeForm = ()=> {
         <form onSubmit={handleSubmit}>
             <div>
                 <label htmlFor="incomeSource">Source of Income</label>
-                <input type="text"   name="incomeSource" id="incomeSource"  placeholder="Salary" onChange={handleChange} value={income.incomeSource}/>
+                <input type="text"   name="incomeSource" id="incomeSource"  placeholder="Salary" onChange={handleChange} value={income.incomeSource} required />
             </div>
             <div>
                 <label htmlFor="incomeAmount">Amount of Income</label>
-                <input type="number" name="incomeAmount" id="incomeAmount" onChange={handleChange} value={income.incomeAmount}/>
+                <input type="number" name="incomeAmount" id="incomeAmount" onChange={handleChange} value={income.incomeAmount} required/>
             </div>
             <div>
                 <label htmlFor="incomeDate">Date of Income</label>
-                <input type="date" name="incomeDate" id="incomeDate" onChange={handleChange} value={income.incomeDate} />
+                <input type="date" name="incomeDate" id="incomeDate" onChange={handleChange} value={income.incomeDate} required />
             </div>
             <button type="submit">Add Income</button>
         </form>
-        <ul>
-        {
-            incomes.map((income: incomeBudget, index: number) =>(
-            <li key={index}>{income.incomeSource}: {income.incomeAmount}$ On {income.incomeDate}
-                        <br /> <button  onClick={() => deleteItem(index)}>Delete</button>
-            </li> 
+        
+        {/* <ul>
+        {   
+        incomeArray.map((income: incomeBudget, index: number) =>(
+          <li key={index}> 
+           {income.incomeSource} : {income.incomeAmount}$  On {income.incomeDate}
+           <br /> <button  onClick={() => handleDelete(income.id)}><FaTrash/></button>
+          </li> 
 
-            ))
+          ))
+
           }
-        </ul>
+        </ul> */}
+         <ul>
+        {incomeArray.length > 0  ? (  
+        incomeArray.map((income, index) =>(
+        <li key={index}> 
+        {income.incomeSource} : {income.incomeAmount}$  On {income.incomeDate}
+         <button  onClick={() => handleDelete(income.id)}> 
+          <FaTrash/> 
+          </button>
+        </li> 
+
+        ))
+        ) : (
+        <p>No Data For Salary</p>
+        )
+      }
+    </ul> 
     </div>
   )
 }
@@ -133,3 +144,48 @@ export default  IncomeForm;
     //  setIncome('');
     //  setAmount('');
     //  setDate('');
+
+    // const handleSubmit = (event: FormEvent) =>
+    // {
+    //   event.preventDefault();
+    //   if(income.incomeAmount && income.incomeSource && income.incomeDate)
+    //   {
+    //     const newIncome = {
+    //       //name of input:value useState.name input
+    //       incomeSource:income.incomeSource, 
+    //       incomeAmount:income.incomeAmount,
+    //       incomeDate:income.incomeDate,
+    //       }; //to update attribute use function set....() to store data into income, amount & date
+    //       setIncomeArray([ ...incomeArray, newIncome]);
+    //       setIsError(false);
+    //       console.log("change all done")
+    //   }
+    //   else
+    //   {
+    //     setIsError(true);
+    //     console.log("you miss input")
+
+    //   }
+    //   //to reset value
+    //   setIncome({
+    //     //the same of name input
+    //     incomeSource:'', 
+    //     incomeAmount:0,
+    //     incomeDate:''});
+   
+    // }
+    // <ul>
+    // {   incomeArray.length > 0  ? (  
+    //     incomeArray.map((income, index) =>(
+    //     <li key={index}> 
+    //     {income.incomeSource} : {income.incomeAmount}$  On {income.incomeDate}
+    //      <button  onClick={() => handleDelete(income.id)}> 
+    //       <FaTrash/> 
+    //       </button>
+    //     </li> 
+
+    //     ))) : (
+    //     <p>No Data For Salary</p>
+    //     )
+    //   }
+    // </ul>
