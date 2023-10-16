@@ -1,4 +1,6 @@
 import {FormEvent , useState , ChangeEvent} from 'react'
+import { useNavigate } from "react-router-dom";
+
 
 type TransferForSavingProps =
 {
@@ -6,6 +8,9 @@ type TransferForSavingProps =
 }
 
 const TransferForSaving = (props: TransferForSavingProps) => {
+
+  const navigate = useNavigate()
+
 
   const [transferAmount, setTransferAmount] = useState(0);
 
@@ -19,7 +24,9 @@ const TransferForSaving = (props: TransferForSavingProps) => {
     event.preventDefault();
     // props.attribute on type (varaible to useState)
     props.getSaveTarget(transferAmount);
-    setTransferAmount(0)
+    setTransferAmount(0);
+    navigate('/TargetForSaving');
+
   }
 
 

@@ -40,7 +40,7 @@ const IncomeForm = ()=> {
       event.preventDefault();
       if(income.incomeAmount && income.incomeSource && income.incomeDate)
       {
-        const newIncome = { ...income, id: uuidv4()}
+        const newIncome = { ...income, id: new Date().getMilliseconds()}
         setIncomeArray((prevIncomeArray) =>
          { 
           return [...prevIncomeArray, newIncome]; 
