@@ -1,7 +1,8 @@
 import {FormEvent , useState , ChangeEvent} from 'react'
 import { toast } from 'react-toastify';
 import {FaTrash} from 'react-icons/fa'
-import {v4 as uuidv4} from 'uuid'
+import '../App.css'
+
 
 
 type incomeBudget =
@@ -52,6 +53,12 @@ const IncomeForm = ()=> {
       {
       toast.error("You missing feild")
       }
+        //to reset value
+        setIncome({
+          id:0,
+      incomeSource: '',
+      incomeAmount: 0,
+      incomeDate : '', });
     }
 
 
@@ -63,39 +70,28 @@ const IncomeForm = ()=> {
     };
 
   return (
-    <div>
-        <form onSubmit={handleSubmit}>
-            <div>
+    <div className='box'>
+        <form onSubmit={handleSubmit} className='todoForm' >
+            <div className='todoForm'>
                 <label htmlFor="incomeSource">Source of Income</label>
-                <input type="text"   name="incomeSource" id="incomeSource"  placeholder="Salary" onChange={handleChange} value={income.incomeSource} required />
+                <input type="text"   name="incomeSource" id="incomeSource"  placeholder="Salary" onChange={handleChange} value={income.incomeSource}  />
             </div>
-            <div>
+            <div className='todoForm'>
                 <label htmlFor="incomeAmount">Amount of Income</label>
-                <input type="number" name="incomeAmount" id="incomeAmount" onChange={handleChange} value={income.incomeAmount} required/>
+                <input type="number" name="incomeAmount" id="incomeAmount" onChange={handleChange} value={income.incomeAmount}  placeholder="10000 $"  />
             </div>
-            <div>
+            <div className='todoForm'>
                 <label htmlFor="incomeDate">Date of Income</label>
-                <input type="date" name="incomeDate" id="incomeDate" onChange={handleChange} value={income.incomeDate} required />
+                <input type="date" name="incomeDate" id="incomeDate" placeholder="Day / Month / Year" onChange={handleChange} value={income.incomeDate} required />
             </div>
             <button type="submit">Add Income</button>
         </form>
         
-        {/* <ul>
-        {   
-        incomeArray.map((income: incomeBudget, index: number) =>(
-          <li key={index}> 
-           {income.incomeSource} : {income.incomeAmount}$  On {income.incomeDate}
-           <br /> <button  onClick={() => handleDelete(income.id)}><FaTrash/></button>
-          </li> 
-
-          ))
-
-          }
-        </ul> */}
+        <div className='boxVisible'>
          <ul>
         {incomeArray.length > 0  ? (  
         incomeArray.map((income, index) =>(
-        <li key={index}> 
+        <li key={index} className='boxCenter'> 
         {income.incomeSource} : {income.incomeAmount}$  On {income.incomeDate}
          <button  onClick={() => handleDelete(income.id)}> 
           <FaTrash/> 
@@ -108,6 +104,8 @@ const IncomeForm = ()=> {
         )
       }
     </ul> 
+    </div>
+
     </div>
   )
 }

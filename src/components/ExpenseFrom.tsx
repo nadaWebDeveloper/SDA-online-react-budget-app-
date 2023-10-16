@@ -1,10 +1,11 @@
 import {FormEvent , useState , ChangeEvent} from 'react'
 import {FaTrash} from 'react-icons/fa'
-
+import { toast } from 'react-toastify';
 
 
 type ExpenseBudget =
 {
+  id: number;
   expenseSource:string;
   expenseAmount: number;
   expenseDate: string
@@ -13,6 +14,7 @@ type ExpenseBudget =
 const ExpenseFrom = () => {
 
   const [expense, setExpense] = useState<ExpenseBudget>({
+    id:0,
     expenseSource: '',
     expenseAmount: 0,
     expenseDate : '', 
@@ -25,7 +27,6 @@ const ExpenseFrom = () => {
   setExpense({ ...expense, [name]:value});
  }
    
-  // const [expense,setExpense] = useState<boolean>(false);
  
   const [isError,setIsError ] = useState(false);
   const handleSubmit = (event: FormEvent) =>
@@ -33,24 +34,21 @@ const ExpenseFrom = () => {
     event.preventDefault();
     if(expense.expenseSource && expense.expenseAmount && expense.expenseDate)
     {
-      const newExpense = {
-        //name of input:value useState.name input
-        expenseSource:expense.expenseSource, 
-        expenseAmount:expense.expenseAmount,
-        expenseDate:expense.expenseDate,
-        }; 
-        setExpenseArray([ ...expenseArray, newExpense]);
-        setIsError(false);
-        console.log("change all done")
+      const newIncome = { ...expense, id: new Date().getMilliseconds()}
+      setExpenseArray((prevIncomeArray) =>
+    { 
+     return [...prevIncomeArray, newIncome]; 
+   });
+   console.log(expenseArray)
+   toast.success("New Expense Is Added") 
     }
     else
     {
-      setIsError(true);
-      console.log("you miss input")
-
+       toast.error("You missing feild")
     }
     //to reset value
     setExpense({
+      id:0,
       expenseSource: '',
       expenseAmount: 0,
       expenseDate : '', });
@@ -58,41 +56,49 @@ const ExpenseFrom = () => {
   }
 
 
-
-  const deleteItem = (indexToDelete: number) => {
-    setExpenseArray(expenses => expenses.filter((_, index) => index !== indexToDelete));
-    console.log("Delete from array")
+  const handleDelete = (id: number) => 
+  {
+   const filteredIncomeArray = expenseArray.filter((expense) => expense.id !== id)
+   setExpenseArray(filteredIncomeArray); //to update array after deleting
 
   };
 
   return (
-    <div>
-          <form onSubmit={handleSubmit}>
-            <div>
+    <div className='box'>
+          <form onSubmit={handleSubmit} className='todoForm'>
+            <div className='todoForm'>
                 <label htmlFor="expenseSource">Expense Source</label>
-                <input type="text" name="expenseSource" id="expenseSource"  placeholder="Electricity bill" onChange={handleChange} value={expense.expenseSource} required/>
+                <input type="text" name="expenseSource" id="expenseSource"  placeholder="Electricity bill" onChange={handleChange} value={expense.expenseSource} />
             </div>
-            <div>
+            <div className='todoForm'>
                 <label htmlFor="expenseAmount">Amount of Expense</label>
-                <input type="number" name="expenseAmount" id="expenseAmount" onChange={handleChange} value={expense.expenseAmount} required/>
+                <input type="number" name="expenseAmount" id="expenseAmount"  placeholder="10000 $" onChange={handleChange} value={expense.expenseAmount} required/>
             </div>
-            <div>
+            <div className='todoForm'>
                 <label htmlFor="expenseDate">Date of Expense</label>
                 <input type="date" name="expenseDate" id="expenseDate" onChange={handleChange} value={expense.expenseDate} required/>
             </div>
             <button type="submit">Add Expense</button>
         </form>
-        <ul>
-          {
-            expenseArray.map((expense: ExpenseBudget, index: number) =>(
-            <li key={index}> 
-            {expense.expenseSource}: {expense.expenseAmount}$ On {expense.expenseDate}
-             <br /> <button  onClick={() => deleteItem(index)}><FaTrash/></button>
-            </li> 
 
-            ))
-          }
-        </ul>
+<div className='boxVisible'>
+         <ul>
+        {expenseArray.length > 0  ? (  
+        expenseArray.map((expense, index) =>(
+        <li key={index} className='boxCenter'> 
+         {expense.expenseSource} : {expense.expenseAmount}$  On {expense.expenseDate}
+         <button  onClick={() => handleDelete(expense.id)}> 
+          <FaTrash/> 
+          </button>
+        </li> 
+
+        ))
+        ) : (
+        <p>No Data For Expense</p>
+        )
+      }
+    </ul> 
+    </div>
     </div>
   )
 }

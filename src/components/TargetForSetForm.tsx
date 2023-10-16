@@ -25,19 +25,21 @@ const TargetForSaving = (props: targetForSavingProps) => {
 
 
   return (
-    <div>
-    <form onSubmit={handleSubmit}>
-        <div>
+    <div className='box'>
+    <form onSubmit={handleSubmit} className='todoForm'>
+        <div className='todoForm'>
                 <label htmlFor="saveTarget">Set Target</label>
                 <input type="number" name="saveTarget" id="saveTarget" onChange={handleChange} value={target} required />
         </div>
                 <button type="submit">Reset</button>
     </form>
 
-        <div>
+        <div className='boxVisible'>
+          <div className='boxCenter'>
              <h5>Current Saving :{props.savingAmount} </h5>
              <h5>Target : {target} </h5>
              <h5>Progress : </h5><progress max="100" value={20}/> 
+             </div>
         </div>
     </div>
   )
